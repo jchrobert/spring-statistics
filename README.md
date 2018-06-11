@@ -62,6 +62,7 @@ Another solution would be to implement the application with **Spring Webflux** a
 **TODO**
 
 * Proper and complete API documentation with Spring REST Docs and/or OpenAPI (swagger-springfox)
+* Proper logging and exception handling, particulary for Async tasks.
 * Multi-threaded stress tests with high load of transactions and read of statistics.
 * Dockerization of the project.
 
