@@ -98,7 +98,7 @@ public class StatisticsService {
         transactionsQueue.removeIf(TRANSACTION_VALID_PREDICATE.negate());
     }
 
-    public boolean isObsolete(Instant eventTime) {
+    public boolean isObsolete(final Instant eventTime) {
         return eventTime.isBefore(statisticsCache.get().getTimestamp());
     }
 }

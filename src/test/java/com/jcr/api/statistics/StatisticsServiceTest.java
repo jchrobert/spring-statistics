@@ -54,8 +54,11 @@ public class StatisticsServiceTest {
         statisticsService.addTransaction(t1);
         statisticsService.addTransaction(t1);
         assertEquals(Double.valueOf(187.5), statisticsService.getStatistics().getSum());
-        // wait after 2 second, the t2 transactions is then removed from the last 60 seconds transactions queue.
-        Thread.sleep(2000);
+        // at second one, the transactions are still there
+        Thread.sleep(1000);
+        assertEquals(Double.valueOf(187.5), statisticsService.getStatistics().getSum());
+        // from the second two, the t2 transactions has expired and is removed from the last 60 seconds transactions queue.
+        Thread.sleep(1000);
         assertEquals(Double.valueOf(180.0), statisticsService.getStatistics().getSum());
         statisticsService.addTransaction(t3);
         assertEquals(Double.valueOf(380.0), statisticsService.getStatistics().getSum());

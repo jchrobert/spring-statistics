@@ -1,14 +1,9 @@
 package com.jcr.api.statistics.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
-import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 /**
@@ -18,7 +13,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
  * @since 10.06.18
  */
 @Configuration
-@EnableScheduling
 public class StatisticsConfiguration {
 
 
