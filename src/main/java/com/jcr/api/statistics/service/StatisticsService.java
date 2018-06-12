@@ -30,7 +30,7 @@ import static com.jcr.api.statistics.util.StatsUtil.getValidTransactions;
 @Service
 public class StatisticsService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ScheduledTasks.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(StatisticsService.class);
 
     // use a thread-safe non-blocking queue to store the transactions
     private ConcurrentLinkedQueue<Transaction> transactionsQueue = new ConcurrentLinkedQueue<>();
