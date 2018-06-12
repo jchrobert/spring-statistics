@@ -22,12 +22,16 @@ public class ScheduledTasks {
     @Autowired
     private StatisticsService statisticsService;
 
+    @Autowired
+    private TransactionService transactionService;
+
     /**
      * Runs remove of expired transactions every 2 minutes.
+     * This is useful to not full the transaction queue unnecessarily.
      */
     @Scheduled(fixedRateString = "${statistics.remove.transactions.fixedRate:120000}")
     public void purgeTransactions() {
-        statisticsService.removeExpiredTransactions();
+        transactionService.removeExpiredTransactions();
     }
 
     /**

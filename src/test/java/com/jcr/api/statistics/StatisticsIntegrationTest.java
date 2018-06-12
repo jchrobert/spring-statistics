@@ -2,6 +2,7 @@ package com.jcr.api.statistics;
 
 import com.jcr.api.statistics.model.Transaction;
 import com.jcr.api.statistics.service.StatisticsService;
+import com.jcr.api.statistics.service.TransactionService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,12 @@ import static org.junit.Assert.assertEquals;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class StatisticsServiceTest {
+public class StatisticsIntegrationTest {
 
     @Autowired
     private StatisticsService statisticsService;
+    @Autowired
+    private TransactionService transactionService;
 
     @Test
     public void addTransactions() throws InterruptedException {
@@ -35,24 +38,24 @@ public class StatisticsServiceTest {
         Transaction t3 = new Transaction(200.0, now().toEpochMilli());
         assertEquals(0, statisticsService.getStatistics().getCount().longValue());
 
-        statisticsService.addTransaction(t1);
+        transactionService.addTransaction(t1);
         assertEquals(1, statisticsService.getStatistics().getCount().longValue());
         assertEquals(Double.valueOf(30.0), statisticsService.getStatistics().getSum());
 
-        statisticsService.addTransaction(t2);
+        transactionService.addTransaction(t2);
         assertEquals(2, statisticsService.getStatistics().getCount().longValue());
         assertEquals(Double.valueOf(37.5), statisticsService.getStatistics().getSum());
 
-        statisticsService.addTransaction(t1);
+        transactionService.addTransaction(t1);
         assertEquals(3, statisticsService.getStatistics().getCount().longValue());
         assertEquals(Double.valueOf(67.5), statisticsService.getStatistics().getSum());
         assertEquals(Double.valueOf(7.5), statisticsService.getStatistics().getMin());
         assertEquals(Double.valueOf(30.0), statisticsService.getStatistics().getMax());
 
-        statisticsService.addTransaction(t1);
-        statisticsService.addTransaction(t1);
-        statisticsService.addTransaction(t1);
-        statisticsService.addTransaction(t1);
+        transactionService.addTransaction(t1);
+        transactionService.addTransaction(t1);
+        transactionService.addTransaction(t1);
+        transactionService.addTransaction(t1);
         assertEquals(Double.valueOf(187.5), statisticsService.getStatistics().getSum());
         // at second one, the transactions are still there
         Thread.sleep(1000);
@@ -60,7 +63,7 @@ public class StatisticsServiceTest {
         // from the second two, the t2 transactions has expired and is removed from the last 60 seconds transactions queue.
         Thread.sleep(1000);
         assertEquals(Double.valueOf(180.0), statisticsService.getStatistics().getSum());
-        statisticsService.addTransaction(t3);
+        transactionService.addTransaction(t3);
         assertEquals(Double.valueOf(380.0), statisticsService.getStatistics().getSum());
 
     }

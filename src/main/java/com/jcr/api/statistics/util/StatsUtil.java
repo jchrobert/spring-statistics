@@ -27,7 +27,6 @@ import static java.util.stream.Collectors.toList;
  */
 public final class StatsUtil {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(StatsUtil.class);
 
     private static final int TIME_LIMIT = 60;
     private static final DecimalFormat DOUBLE_DECIMAL_FORMAT = new DecimalFormat("##.##");
