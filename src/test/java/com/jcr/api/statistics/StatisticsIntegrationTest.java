@@ -29,7 +29,8 @@ public class StatisticsIntegrationTest {
     private TransactionService transactionService;
 
     @Test
-    public void addTransactions() throws InterruptedException {
+    public void addTransactionsAndCalculateStatistics() throws InterruptedException {
+
         // long living transaction (50sec timelife)
         Transaction t1 = new Transaction(30.0, now().minusSeconds(10).toEpochMilli());
         // ready to expire (1 sec timelife)

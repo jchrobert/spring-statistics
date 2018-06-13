@@ -2,13 +2,9 @@ package com.jcr.api.statistics.util;
 
 import com.jcr.api.statistics.model.Statistics;
 import com.jcr.api.statistics.model.Transaction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
 import java.time.Duration;
-import java.time.Instant;
-import java.util.ArrayList;
 import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import java.util.function.Function;
@@ -31,27 +27,28 @@ public final class StatsUtil {
     private static final int TIME_LIMIT = 60;
     private static final DecimalFormat DOUBLE_DECIMAL_FORMAT = new DecimalFormat("##.##");
 
-
     private StatsUtil() {
     }
 
     /**
-     * Predicate validating a time of a transaction.
-     * Returns {true} if the instant time is between 0 and 60 seconds comparing to the current instant
+     * Valid for statistics if the transaction time is between 0 and 60 seconds comparing to the current instant
      *
-     * @param instant instant time to verify
      * @return true if the time is valid (less than 60 seconds)
      */
-    public static boolean checkValidForStatistics(Instant instant) {
-        long duration = Duration.between(instant, now()).getSeconds();
-        return duration >= 0 && duration <= TIME_LIMIT;
-    }
 
-    public static final Predicate<Transaction> TRANSACTION_VALID_PREDICATE = t -> checkValidForStatistics(t.getInstant());
-
-    public static boolean checkValidForStatistics(Transaction transaction) {
+    public static boolean isValidForStatistics(Transaction transaction) {
         return TRANSACTION_VALID_PREDICATE.test(transaction);
     }
+
+    /**
+     * Predicate validating the time of a transaction.
+     */
+    public static final Predicate<Transaction> TRANSACTION_VALID_PREDICATE =
+            t -> {
+                final long duration = Duration.between(t.getInstant(), now()).getSeconds();
+                return duration >= 0 && duration <= TIME_LIMIT;
+            };
+
 
     /**
      * Filters valid transactions.
@@ -60,13 +57,12 @@ public final class StatsUtil {
      * @return list of valid transactions
      */
     public static List<Transaction> getValidTransactions(final List<Transaction> transactions) {
-        List<Transaction> subList;
-        subList = transactions.stream().filter(TRANSACTION_VALID_PREDICATE).collect(toList());
-        return subList;
+        return transactions.stream().filter(TRANSACTION_VALID_PREDICATE).collect(toList());
     }
 
     public static Statistics calculateStatistics(final List<Transaction> transactions) {
         DoubleSummaryStatistics currentStats = transactions.stream()
+                .filter(TRANSACTION_VALID_PREDICATE)
                 .collect(Collectors.summarizingDouble(Transaction::getAmount));
         return toStatistics(currentStats);
     }

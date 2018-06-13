@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
-import static com.jcr.api.statistics.util.StatsUtil.checkValidForStatistics;
+import static com.jcr.api.statistics.util.StatsUtil.isValidForStatistics;
 
 /**
  * Transaction endpoint.
@@ -29,7 +29,7 @@ public class TransactionController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/transaction")
     public void inputTransaction(@Valid @RequestBody Transaction transaction) throws ExpiredTransactionException {
-        if (!checkValidForStatistics(transaction)) {
+        if (!isValidForStatistics(transaction)) {
             throw new ExpiredTransactionException();
         }
         transactionService.addTransaction(transaction);

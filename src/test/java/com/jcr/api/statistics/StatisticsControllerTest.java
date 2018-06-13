@@ -35,7 +35,7 @@ public class StatisticsControllerTest extends MvcBaseTest {
 
     @Test
     public void testStastisticsRequest() throws Exception {
-        Statistics stats = new Statistics(1245.8, 75.0, 15.90, 250.0, 12L, null);
+        Statistics stats = new Statistics(1245.8, 75.0, 15.90, 250.0, 12L);
         when(statisticsService.getStatistics()).thenReturn(stats);
         mockMvc.perform(get("/statistics")
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))

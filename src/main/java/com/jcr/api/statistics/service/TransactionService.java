@@ -9,11 +9,11 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static com.jcr.api.statistics.util.StatsUtil.TRANSACTION_VALID_PREDICATE;
+import static java.util.Arrays.asList;
 
 /**
  * Service dealing with transactions.
@@ -51,8 +51,14 @@ public class TransactionService {
         transactionsQueue.removeIf(TRANSACTION_VALID_PREDICATE.negate());
     }
 
+    /**
+     * Gets the list from the current queue.
+     * The {@link ConcurrentLinkedQueue#toArray()} assures a "snapshot" of the queue at a certain point of time.
+     *
+     * @return list of current transactions.
+     */
     public List<Transaction> getTransactions() {
-        return new ArrayList<>(transactionsQueue);
+        return asList(transactionsQueue.toArray(new Transaction[0]));
     }
 
 }

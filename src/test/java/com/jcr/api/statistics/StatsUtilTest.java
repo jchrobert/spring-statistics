@@ -18,8 +18,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.jcr.api.statistics.util.StatsUtil.calculateStatistics;
-import static com.jcr.api.statistics.util.StatsUtil.checkValidForStatistics;
 import static com.jcr.api.statistics.util.StatsUtil.getValidTransactions;
+import static com.jcr.api.statistics.util.StatsUtil.isValidForStatistics;
 import static java.time.Instant.now;
 import static java.time.Instant.ofEpochMilli;
 import static org.junit.Assert.assertEquals;
@@ -65,12 +65,13 @@ public class StatsUtilTest {
 
     @Test
     public void testIsValidForStatistics() {
-        validTransactions.forEach(t -> assertTrue(checkValidForStatistics(t)));
+        assertTrue(isValidForStatistics(validTransactions.get(5)));
+        validTransactions.forEach(t -> assertTrue(isValidForStatistics(t)));
     }
 
     @Test
     public void testIsNotValidForStatistics() {
-        expiredTransactions.forEach(t -> assertFalse(checkValidForStatistics(t)));
+        expiredTransactions.forEach(t -> assertFalse(isValidForStatistics(t)));
     }
 
     @Test
@@ -81,18 +82,14 @@ public class StatsUtilTest {
     @Test
     public void testCalculateStatistics() {
         Statistics stats1 = calculateStatistics(validTransactions);
-        Statistics stats2 = calculateStatistics(allTransactions);
         assertEquals(validTransactions.size(), stats1.getCount().longValue());
         assertEquals(Double.valueOf(740.5), stats1.getMax());
         assertEquals(Double.valueOf(7.0), stats1.getMin());
         assertEquals(Double.valueOf(940.9), stats1.getSum());
         assertEquals(Double.valueOf(156.82), stats1.getAvg());
 
-        assertEquals(allTransactions.size(), stats2.getCount().longValue());
-        assertEquals(Double.valueOf(740.5), stats2.getMax());
-        assertEquals(Double.valueOf(5.6), stats2.getMin());
-        assertEquals(Double.valueOf(1239.45), stats2.getSum());
-        assertEquals(Double.valueOf(95.34), stats2.getAvg());
+        Statistics statsEmpty = calculateStatistics(expiredTransactions);
+        assertEquals(Statistics.empty(), statsEmpty);
     }
 
 }

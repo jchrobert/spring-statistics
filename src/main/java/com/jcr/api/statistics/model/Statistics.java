@@ -1,13 +1,8 @@
 package com.jcr.api.statistics.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-
-import java.time.Instant;
-
-import static java.time.Instant.now;
 
 /**
  * Data model for a transaction.
@@ -25,11 +20,9 @@ public class Statistics {
     private Double max;
     private Double min;
     private Long count;
-    @JsonIgnore
-    private Instant timestamp;
 
     public static Statistics empty() {
-        return new Statistics(0.0, 0.0, 0.0, 0.0, 0L, now());
+        return new Statistics(0.0, 0.0, 0.0, 0.0, 0L);
     }
 
 
